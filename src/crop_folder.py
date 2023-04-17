@@ -16,7 +16,7 @@ if __name__ == "__main__":
     os.chdir(project_path_src)
     teams = src.split(os.path.sep)[-1]
     print(teams)
-    for idx, img in enumerate(os.listdir(src)):
+    for idx, img in enumerate(os.listdir(f"{src}{os.path.sep}img")):
         if idx % 10 == 0:
            print(f"processing {img}") 
         subprocess.run(["/usr/local/bin/python3",  "crop_yolo.py",  "--source", f"{src}{os.path.sep}{img}", "--teams", teams],)
