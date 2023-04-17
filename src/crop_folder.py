@@ -23,3 +23,5 @@ if __name__ == "__main__":
         print(f"processing {img}") 
         subprocess.run(["python3",  "crop_yolo.py",  "--source", f"{src}{os.path.sep}img{os.path.sep}{img}", "--teams", teams],)
                             # stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                            
