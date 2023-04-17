@@ -62,6 +62,5 @@ if __name__ == "__main__":
     parser.add_argument('--teams', type=str, default="Team1_Team2", help='naming of the teams of the match')
 
     opt = parser.parse_args()
-    print(opt.source, opt.teams)
     crop(opt.source, opt.teams)
     # print(time.time() - now, "seconds")
