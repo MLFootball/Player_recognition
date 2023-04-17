@@ -9,7 +9,8 @@ import random
 
 def crop(img_path, teams):
     cur_dir = os.getcwd()
-    project_path = os.path.abspath(os.path.dirname(sys.argv[0]))
+    project_path_src = os.path.abspath(os.path.dirname(sys.argv[0]))
+    project_path = os.path.sep.join(project_path_src.split(os.path.sep)[:-1])
     if not os.path.exists(f"{project_path}/yolov7"):
         raise ValueError("No yolov7 model in project")
     os.chdir(f"{project_path}/yolov7")
@@ -17,7 +18,6 @@ def crop(img_path, teams):
         # there are nonempty results from prev runs
         for run in os.listdir(f"{project_path}/yolov7/runs/detect"):
             shutil.rmtree(f"{project_path}/yolov7/runs/detect/{run}")
-    print(os.getcwd())
     subprocess.run(["/usr/local/bin/python3",  "detect.py", "--weights", "yolov7.pt", "--conf", "0.25", 
                             "--img-size", "640", "--source", img_path, "--save-txt", "--nosave"],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -49,18 +49,16 @@ def crop(img_path, teams):
         y1, y2 = y_center + box_h // 2, y_center - box_h // 2
         cropped_img = img[y2:y1, x1:x2]
         cv2.imwrite( f"./data/players/{teams}/{teams}_{filename}_{idx}.png", cropped_img)
-        
-
-
     
-
-    print(cur_dir, project_path)
 
 
 if __name__ == "__main__":
+    import time
+    now = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
     parser.add_argument('--teams', type=str, default="Team1_Team2", help='naming of the teams of the match')
 
     opt = parser.parse_args()
     crop(opt.source, opt.teams)
+    print(time.time() - now, "seconds")
