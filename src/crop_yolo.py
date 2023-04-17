@@ -33,10 +33,12 @@ def crop(img_path, teams):
                 if box[0] != "0":
                     continue
                 bdnbxes.append([float(coord) for coord in box[1:]])
-        
-        
 
-        for directory in ["../data", "../data/players", f"../data/players/{teams}"]:
+
+        
+        os.chdir(project_path)
+
+        for directory in ["./data", "./data/players", f"./data/players/{teams}"]:
             if not os.path.exists(directory):
                 os.mkdir(directory)
         
@@ -45,14 +47,12 @@ def crop(img_path, teams):
         
         for idx, bdnbx in enumerate(bdnbxes):
             x_center, y_center, box_w, box_h, = int(bdnbx[0] * imW), int(bdnbx[1] * imH), int(bdnbx[2] * imW), int(bdnbx[3] * imH)
-            x1, x2 = x_center - box_w // 2, x_center + box_w //2
-            y1, y2 = y_center + box_h // 2, y_center - box_h // 2
+            x1, x2 = max(x_center - box_w // 2, 0), max(x_center + box_w //2, 0)
+            y1, y2 = max(y_center + box_h // 2, 0), max(y_center - box_h // 2, 0)
             cropped_img = img[y2:y1, x1:x2]
-            cv2.imwrite( f"../data/players/{teams}/{teams}_{filename}_{idx}.png", cropped_img)
+            cv2.imwrite( f"./data/players/{teams}/{teams}_{filename}_{idx}.png", cropped_img)
         
     os.chdir(cur_dir)
-        
-
 
 if __name__ == "__main__":
     # import time
@@ -62,5 +62,6 @@ if __name__ == "__main__":
     parser.add_argument('--teams', type=str, default="Team1_Team2", help='naming of the teams of the match')
 
     opt = parser.parse_args()
+    print(opt.source, opt.teams)
     crop(opt.source, opt.teams)
     # print(time.time() - now, "seconds")

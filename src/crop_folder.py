@@ -3,6 +3,9 @@ import subprocess
 import argparse
 import sys
 
+
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('directory', type=str, help='imgs source') 
@@ -17,7 +20,6 @@ if __name__ == "__main__":
     teams = src.split(os.path.sep)[-1]
     print(teams)
     for idx, img in enumerate(os.listdir(f"{src}{os.path.sep}img")):
-        if idx % 10 == 0:
-           print(f"processing {img}") 
-        subprocess.run(["/usr/local/bin/python3",  "crop_yolo.py",  "--source", f"{src}{os.path.sep}{img}", "--teams", teams],)
+        print(f"processing {img}") 
+        subprocess.run(["/usr/local/bin/python3",  "crop_yolo.py",  "--source", f"{src}{os.path.sep}img{os.path.sep}{img}", "--teams", teams],)
                             # stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
