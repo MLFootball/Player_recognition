@@ -25,40 +25,43 @@ def crop(img_path, teams):
     bdnbxes = []
     filename = os.path.splitext(img_path.split(os.path.sep)[-1])[0]
     
-    with open(f"{project_path}/yolov7/runs/detect/exp/labels/{filename}.txt", mode="r") as labels:
-        for line in labels:
-            box = line.strip().split()
-            if box[0] != "0":
-                continue
-            bdnbxes.append([float(coord) for coord in box[1:]])
+    labels_path = f"{project_path}/yolov7/runs/detect/exp/labels/{filename}.txt"
+    if os.path.exists(labels_path):
+        with open(labels_path, mode="r") as labels:
+            for line in labels:
+                box = line.strip().split()
+                if box[0] != "0":
+                    continue
+                bdnbxes.append([float(coord) for coord in box[1:]])
+        
+        
 
-
-    
+        for directory in ["../data", "../data/players", f"../data/players/{teams}"]:
+            if not os.path.exists(directory):
+                os.mkdir(directory)
+        
+        img = cv2.imread(img_path)
+        imH, imW, _ = img.shape
+        
+        for idx, bdnbx in enumerate(bdnbxes):
+            x_center, y_center, box_w, box_h, = int(bdnbx[0] * imW), int(bdnbx[1] * imH), int(bdnbx[2] * imW), int(bdnbx[3] * imH)
+            x1, x2 = x_center - box_w // 2, x_center + box_w //2
+            y1, y2 = y_center + box_h // 2, y_center - box_h // 2
+            cropped_img = img[y2:y1, x1:x2]
+            cv2.imwrite( f"../data/players/{teams}/{teams}_{filename}_{idx}.png", cropped_img)
+        
     os.chdir(cur_dir)
-
-    for directory in ["./data", "./data/players", f"./data/players/{teams}"]:
-        if not os.path.exists(directory):
-            os.mkdir(directory)
-    
-    img = cv2.imread(img_path)
-    imH, imW, _ = img.shape
-    
-    for idx, bdnbx in enumerate(bdnbxes):
-        x_center, y_center, box_w, box_h, = int(bdnbx[0] * imW), int(bdnbx[1] * imH), int(bdnbx[2] * imW), int(bdnbx[3] * imH)
-        x1, x2 = x_center - box_w // 2, x_center + box_w //2
-        y1, y2 = y_center + box_h // 2, y_center - box_h // 2
-        cropped_img = img[y2:y1, x1:x2]
-        cv2.imwrite( f"./data/players/{teams}/{teams}_{filename}_{idx}.png", cropped_img)
-    
+        
 
 
 if __name__ == "__main__":
-    import time
-    now = time.time()
+    # import time
+    # now = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
     parser.add_argument('--teams', type=str, default="Team1_Team2", help='naming of the teams of the match')
 
     opt = parser.parse_args()
+    print(opt.source, opt.teams)
     crop(opt.source, opt.teams)
-    print(time.time() - now, "seconds")
+    # print(time.time() - now, "seconds")
