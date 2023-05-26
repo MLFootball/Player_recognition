@@ -18,7 +18,7 @@ def crop(img_path, teams):
         # there are nonempty results from prev runs
         for run in os.listdir(f"{project_path}/yolov7/runs/detect"):
             shutil.rmtree(f"{project_path}/yolov7/runs/detect/{run}")
-    subprocess.run(["/usr/local/bin/python3",  "detect.py", "--weights", "yolov7.pt", "--conf", "0.25", 
+    subprocess.run(["python3",  "detect.py", "--weights", "yolov7.pt", "--conf", "0.25", 
                             "--img-size", "640", "--source", img_path, "--save-txt", "--nosave"],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     # time.sleep(3)

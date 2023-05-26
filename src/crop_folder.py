@@ -21,5 +21,7 @@ if __name__ == "__main__":
     print(teams)
     for idx, img in enumerate(os.listdir(f"{src}{os.path.sep}img")):
         print(f"processing {img}") 
-        subprocess.run(["/usr/local/bin/python3",  "crop_yolo.py",  "--source", f"{src}{os.path.sep}img{os.path.sep}{img}", "--teams", teams],)
+        subprocess.run(["python3",  "crop_yolo.py",  "--source", f"{src}{os.path.sep}img{os.path.sep}{img}", "--teams", teams],)
                             # stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                            
